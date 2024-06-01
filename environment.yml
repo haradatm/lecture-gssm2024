@@ -1,0 +1,27 @@
+name: gssm2023
+
+channels:
+  - defaults
+  - conda-forge
+
+dependencies:
+  - python=3.11.3
+  - ipython
+  - ipykernel
+  - python
+  - numpy
+  - matplotlib
+  - altair
+  - scikit-learn
+  - pandas
+  # - pytorch
+  # - tensorflow
+  - gdown
+  - seaborn
+  - openpyxl
+  - pygraphviz
+  - jinja2
+  - pre-commit
+  - pip
+  - pip:
+    - -r requirements.txt
