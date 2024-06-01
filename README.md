@@ -1,6 +1,6 @@
-# lecture-gssm2023
+# lecture-gssm2024
 
-This repository will be used for courses 01KA438 and 0ADM126 offered in 2023.
+This repository will be used for courses 01KA438 and 0ADM126 offered in 2024.
 
 📁 **Organized**: The project structure is refereed to [datascience-template](https://github.com/icoxfog417/datascience-template).
 
@@ -8,7 +8,7 @@ This repository will be used for courses 01KA438 and 0ADM126 offered in 2023.
 
 Here is the notebook link to provide the quick access to your analysis. You can create the conda environment by Right click `Build Conda Environment` or `conda env create -f environment.yml` in Studio Lab.
 
-[![Open in SageMaker Studio Lab](https://studiolab.sagemaker.aws/studiolab.svg)](https://studiolab.sagemaker.aws/import/github/haradatm/lecture-gssm2023/blob/main/README.md)
+[![Open in SageMaker Studio Lab](https://studiolab.sagemaker.aws/studiolab.svg)](https://studiolab.sagemaker.aws/import/github/haradatm/lecture-gssm2024/blob/main/README.md)
 
 ## Project Structure
 
