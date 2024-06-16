@@ -16,23 +16,19 @@ Here is the notebook link to provide the quick access to your analysis. You can 
 .
 ├── README.md                       # describe this project
 ├── notebooks                       # store notebooks
-│   ├── day-2-1.ipynb
-│   ├── day-2-2.ipynb
-│   ├── day-3.ipynb
-│   ├── day-4.ipynb
+│   ├── day-3-1.ipynb
+│   ├── day-3-2.ipynb
+│   ├── day-4-1.ipynb
+│   ├── day-4-2.ipynb
 │   ├── day-5.ipynb
-│   ├── images
-│   └── miscs
-│       └── covid-19.ipynb
+│   └── images
 ├── notebooks-samples               # stores notebook execution results in HTML
-│   ├── day-2-1.html
-│   ├── day-2-2.html
-│   ├── day-3.html
-│   ├── day-4.html
+│   ├── day-3-1.html
+│   ├── day-3-2.html
+│   ├── day-4-1.html
+│   ├── day-4-2.html
 │   ├── day-5.html
-│   ├── images
-│   └── miscs
-│       └── covid-19.html
+│   └── images
 ├── scripts                         # store source code used in notebook
 │   ├── install_cabocha.sh
 │   └── install_mecab.sh
@@ -43,8 +39,6 @@ Here is the notebook link to provide the quick access to your analysis. You can 
 │   └── practice-4.pdf
 │   └── practice-5.pdf
 └── miscs                           # store miscellaneous resources
-    ├── coding-rule.txt.zip
     ├── practice-3_sample.xlsx
-    ├── practice-4_sample.xlsx
-    └── z1_edit_words3.textClipping
+    └── practice-4_sample.xlsx
 ```
