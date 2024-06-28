@@ -18,8 +18,8 @@ random.seed(seed)
 np.random.seed(seed)
 
 # フォントパスを取得する
-font_path = !find ${HOME} -name "ipaexg.ttf"
-# font_path='/Library/Fonts/Arial Unicode.ttf',
+# font_path = !find ${HOME} -name "ipaexg.ttf"
+font_path='/Library/Fonts/Arial Unicode.ttf',
 
 # ワードクラウドを描画する
 def plot_wordcloud(word_str, width=6, height=4):
@@ -478,3 +478,37 @@ def jaccard_attrs_coef(df, attr_counts, word_counts, total=10000, conditional=Fa
     jaccard_df = pd.DataFrame(Xj, columns=df.columns, index=df.index)
 
     return jaccard_df
+
+
+# トピック分布を描画する
+def plot_topic_distribution(topic_distribution, width=6, height=4):
+
+    # プロットの準備
+    fig = plt.figure(figsize=(width, height))
+    ax = fig.add_subplot(1, 1, 1)
+
+    # 指定したプロット位置(ax)にワードクラウドを描画する
+    plot_topic_distribution_ax(ax, topic_distribution)
+
+    # プロットの仕上げ
+    # plt.axis("off")
+    plt.tight_layout()
+    plt.show()
+
+# 指定したプロット位置(ax)にトピック分布を描画する
+def plot_topic_distribution_ax(ax, topic_distribution):
+
+    n_topics = len(topic_distribution)
+
+    # 棒グラフ
+    x = np.arange(n_topics)
+    bars = ax.bar(x, topic_distribution)
+    ax.set_xlabel('トピック')
+    ax.set_ylabel('割合')
+    ax.set_xticks(x, [f'#{i+1}' for i in range(n_topics)])
+    ax.grid(True, linestyle='--', alpha=0.3)
+
+    # 棒の上に値を表示
+    for bar in bars:
+        height = bar.get_height()
+        ax.text(bar.get_x() + bar.get_width()/2., height, f'{height*100:.1f}%', ha='center', va='bottom')
