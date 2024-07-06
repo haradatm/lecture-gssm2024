@@ -4,3 +4,4 @@ japanize-matplotlib
 wordcloud
 networkx
 mca
+pyvis

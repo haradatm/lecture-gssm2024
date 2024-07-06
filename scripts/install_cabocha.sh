@@ -42,5 +42,5 @@ make check
 make install
 cd python
 pip install -e .
-cd ${HOME}/.conda/envs/gssm2023/lib
+cd ${HOME}/.conda/envs/gssm2024/lib
 ln -s ${INSTALL_ROOT}/lib/libcabocha.so.5.0.0 ./libcabocha.so.5

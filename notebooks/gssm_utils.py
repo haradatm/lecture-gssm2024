@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 # 必要ライブラリのインポート
+import os
 import random
 import numpy as np
 import pandas as pd
@@ -9,7 +10,9 @@ import japanize_matplotlib
 import networkx as nx
 from networkx.algorithms import community
 from networkx.drawing.nx_agraph import graphviz_layout
+from pyvis.network import Network
 import wordcloud
+import datetime, pytz
 
 
 # 乱数を固定する
@@ -18,8 +21,10 @@ random.seed(seed)
 np.random.seed(seed)
 
 # フォントパスを取得する
-font_path = !find ${HOME} -name "ipaexg.ttf"
 # font_path='/Library/Fonts/Arial Unicode.ttf',
+# font_path = !find ${HOME} -name "ipaexg.ttf"
+font_path = [os.path.join(root, file) for root, dirs, files in os.walk("/home") for file in files if file == 'ipaexg.ttf']
+
 
 # ワードクラウドを描画する
 def plot_wordcloud(word_str, width=6, height=4):
@@ -82,7 +87,7 @@ def plot_topic_model(lda, feature_names, n_top_words=20, width=10, height=4):
 
 
 # 共起ネットワーク図を描画する (抽出語-抽出語用)
-def plot_cooccur_network(df, word_counts, cutoff, width=8, height=8):
+def plot_cooccur_network(df, word_counts, cutoff, width=8, height=8, html=False):
 
     # プロットの準備
     plt.figure(figsize=(width, height))
@@ -92,14 +97,14 @@ def plot_cooccur_network(df, word_counts, cutoff, width=8, height=8):
     ax = fig.add_subplot(1, 1, 1)
 
     # 指定したプロット位置(ax)に共起ネットワーク図を描画する
-    plot_cooccur_network_ax(ax, df, word_counts, cutoff)
+    plot_cooccur_network_ax(ax, df, word_counts, cutoff, html)
 
     # プロットの仕上げ
     plt.axis("off")
     plt.show()
 
 # 指定したプロット位置(ax)に共起ネットワーク図を描画する
-def plot_cooccur_network_ax(ax, df, word_counts, cutoff):
+def plot_cooccur_network_ax(ax, df, word_counts, cutoff, html=False):
 
     # 共起行列の中身(numpy行列)を取り出す
     Xc = df.values
@@ -153,9 +158,13 @@ def plot_cooccur_network_ax(ax, df, word_counts, cutoff):
     nx.draw_networkx_labels(G, pos, font_family='IPAexGothic', ax=ax)
     # ax.axis('off')
 
+    if html:
+        net = Network(notebook=True, cdn_resources='remote')
+        net.from_nx(G)
+        net.show(f"plot_cooccur_network-{datetime.datetime.now().astimezone(pytz.timezone('Asia/Tokyo')).strftime('%Y%m%d%H%M%S.%f')[:-3]}.html")
 
 # 指定したプロット位置(ax)に共起ネットワーク図を描画する
-def plot_cooccur_network_with_code_ax(ax, df, word_counts, cutoff, coding_rule=None):
+def plot_cooccur_network_with_code_ax(ax, df, word_counts, cutoff, coding_rule=None, html=False):
 
     # 共起行列の中身(numpy行列)を取り出す
     Xc = df.values
@@ -220,9 +229,13 @@ def plot_cooccur_network_with_code_ax(ax, df, word_counts, cutoff, coding_rule=N
     nx.draw_networkx_labels(G, pos, font_family='IPAexGothic', ax=ax)
     # ax.axis('off')
 
+    if html:
+        net = Network(notebook=True, cdn_resources='remote')
+        net.from_nx(G)
+        net.show(f"plot_cooccur_network_with_code-{datetime.datetime.now().astimezone(pytz.timezone('Asia/Tokyo')).strftime('%Y%m%d%H%M%S.%f')[:-3]}.html")
 
 # 共起ネットワークを描画する (外部変数-抽出語用)
-def plot_attrs_network(df, attr_counts, word_counts, cutoff, width=8, height=8):
+def plot_attrs_network(df, attr_counts, word_counts, cutoff, width=8, height=8, html=False):
 
     # 共起行列の中身(numpy行列)を取り出す
     Xc = df.values
@@ -290,9 +303,13 @@ def plot_attrs_network(df, attr_counts, word_counts, cutoff, width=8, height=8):
     plt.axis("off")
     plt.show()
 
+    if html:
+        net = Network(notebook=True, cdn_resources='remote')
+        net.from_nx(G)
+        net.show(f"plot_attrs_network-{datetime.datetime.now().astimezone(pytz.timezone('Asia/Tokyo')).strftime('%Y%m%d%H%M%S.%f')[:-3]}.html")
 
 # 係り受けによる共起ネットワークを描画する
-def plot_dependency_network(df, word_counts, cutoff, width=8, height=8):
+def plot_dependency_network(df, word_counts, cutoff, width=8, height=8, html=False):
 
     # 共起行列の中身(numpy行列)を取り出す
     Xc = df.values
@@ -351,6 +368,11 @@ def plot_dependency_network(df, word_counts, cutoff, width=8, height=8):
     # プロットの仕上げ
     plt.axis("off")
     plt.show()
+
+    if html:
+        net = Network(notebook=True, cdn_resources='remote')
+        net.from_nx(G)
+        net.show(f"plot_dependency_network-{datetime.datetime.now().astimezone(pytz.timezone('Asia/Tokyo')).strftime('%Y%m%d%H%M%S.%f')[:-3]}.html")
 
 
 # 対応分析の結果をプロットする
