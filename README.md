@@ -39,6 +39,6 @@ Here is the notebook link to provide the quick access to your analysis. You can 
 │   └── practice-4.pdf
 │   └── practice-5.pdf
 └── miscs                           # store miscellaneous resources
-    ├── practice-3_sample.xlsx
+    ├── practice-2_sample.xlsx
     └── practice-4_sample.xlsx
 ```

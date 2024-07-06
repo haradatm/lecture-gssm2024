@@ -18,8 +18,8 @@ random.seed(seed)
 np.random.seed(seed)
 
 # フォントパスを取得する
-# font_path = !find ${HOME} -name "ipaexg.ttf"
-font_path='/Library/Fonts/Arial Unicode.ttf',
+font_path = !find ${HOME} -name "ipaexg.ttf"
+# font_path='/Library/Fonts/Arial Unicode.ttf',
 
 # ワードクラウドを描画する
 def plot_wordcloud(word_str, width=6, height=4):
