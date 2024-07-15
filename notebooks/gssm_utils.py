@@ -22,9 +22,9 @@ random.seed(seed)
 np.random.seed(seed)
 
 # フォントパスを取得する
-# font_path='/Library/Fonts/Arial Unicode.ttf',
+font_path='/Library/Fonts/Arial Unicode.ttf',
 # font_path = !find ${HOME} -name "ipaexg.ttf"
-font_path = [os.path.join(root, file) for root, dirs, files in os.walk("/home") for file in files if file == 'ipaexg.ttf']
+# font_path = [os.path.join(root, file) for root, dirs, files in os.walk("/home") for file in files if file == 'ipaexg.ttf']
 
 
 # ワードクラウドを描画する
@@ -90,7 +90,7 @@ def plot_topic_model(lda, feature_names, n_top_words=20, width=10, height=4):
 
 
 # 共起ネットワーク図を描画する (抽出語-抽出語用)
-def plot_cooccur_network(df, word_counts, cutoff, width=8, height=8, pyvis=False, name="pyvis.html"):
+def plot_cooccur_network(df, word_counts, cutoff, width=8, height=8, dep=False, pyvis=False, name="pyvis.html"):
 
     # プロットの準備
     plt.figure(figsize=(width, height))
@@ -100,7 +100,7 @@ def plot_cooccur_network(df, word_counts, cutoff, width=8, height=8, pyvis=False
     ax = fig.add_subplot(1, 1, 1)
 
     # 指定したプロット位置(ax)に共起ネットワーク図を描画する
-    pyvis_plot = plot_cooccur_network_ax(ax, df, word_counts, cutoff, pyvis, name)
+    pyvis_plot = plot_cooccur_network_ax(ax, df, word_counts, cutoff, dep, pyvis, name)
 
     # プロットの仕上げ
     plt.axis("off")
@@ -111,7 +111,7 @@ def plot_cooccur_network(df, word_counts, cutoff, width=8, height=8, pyvis=False
         display(pyvis_plot)
 
 # 指定したプロット位置(ax)に共起ネットワーク図を描画する
-def plot_cooccur_network_ax(ax, df, word_counts, cutoff, pyvis=False, name="pyvis.html"):
+def plot_cooccur_network_ax(ax, df, word_counts, cutoff, dep=False, pyvis=False, name="pyvis.html"):
 
     # 共起行列の中身(numpy行列)を取り出す
     Xc = df.values
@@ -139,7 +139,7 @@ def plot_cooccur_network_ax(ax, df, word_counts, cutoff, pyvis=False, name="pyvi
             weights_c.append((words[i], words[j], Xc[i,j] / Xc_max * 3))
 
     # グラフの作成
-    G = nx.Graph()
+    G = nx.Graph() if dep else nx.DiGraph()
     G.add_nodes_from(weights_w)
     G.add_weighted_edges_from(weights_c)
     G.remove_nodes_from(list(nx.isolates(G)))
@@ -174,14 +174,14 @@ def plot_cooccur_network_ax(ax, df, word_counts, cutoff, pyvis=False, name="pyvi
     pyvis_plot = None
     if pyvis:
         # PyVis ネットワークの作成
-        net = Network(notebook=True, cdn_resources='in_line')
+        net = Network(notebook=True, cdn_resources='in_line', directed=dep)
         net.from_nx(G)
         net.show_buttons(filter_=['nodes', 'edges', 'physics'])
         pyvis_plot = net.show(f"{name}")
     return pyvis_plot
 
 # 指定したプロット位置(ax)に共起ネットワーク図を描画する
-def plot_cooccur_network_with_code_ax(ax, df, word_counts, cutoff, coding_rule=None, pyvis=False, name="pyvis.html"):
+def plot_cooccur_network_with_code_ax(ax, df, word_counts, cutoff, coding_rule=None, dep=False, pyvis=False, name="pyvis.html"):
 
     # 共起行列の中身(numpy行列)を取り出す
     Xc = df.values
@@ -209,7 +209,7 @@ def plot_cooccur_network_with_code_ax(ax, df, word_counts, cutoff, coding_rule=N
             weights_c.append((words[i], words[j], Xc[i,j] / Xc_max * 3))
 
     # グラフの作成
-    G = nx.Graph()
+    G = nx.Graph() if dep else nx.DiGraph()
     G.add_nodes_from(weights_w)
     G.add_weighted_edges_from(weights_c)
     G.remove_nodes_from(list(nx.isolates(G)))
@@ -260,7 +260,7 @@ def plot_cooccur_network_with_code_ax(ax, df, word_counts, cutoff, coding_rule=N
     pyvis_plot = None
     if pyvis:
         # PyVis ネットワークの作成
-        net = Network(notebook=True, cdn_resources='in_line')
+        net = Network(notebook=True, cdn_resources='in_line', directed=dep)
         net.from_nx(G)
         net.show_buttons(filter_=['nodes', 'edges', 'physics'])
         pyvis_plot = net.show(f"{name}")
@@ -351,80 +351,18 @@ def plot_attrs_network(df, attr_counts, word_counts, cutoff, width=8, height=8, 
         pyvis_plot = net.show(f"{name}")
         display(pyvis_plot)
 
-# 係り受けによる共起ネットワークを描画する
+# 係り受けによる共起ネットワーク図を描画する (抽出語-抽出語用)
 def plot_dependency_network(df, word_counts, cutoff, width=8, height=8, pyvis=False, name="pyvis.html"):
+    plot_cooccur_network(df, word_counts, cutoff, dep=True, width=width, height=height, pyvis=pyvis, name=name)
 
-    # 共起行列の中身(numpy行列)を取り出す
-    Xc = df.values
+# 指定したプロット位置(ax)に係り受けによる共起ネットワーク図を描画する
+def plot_dependency_network_ax(ax, df, word_counts, cutoff, pyvis=False, name="pyvis.html"):
+    return plot_cooccur_network_ax(ax, df, word_counts, cutoff, dep=True, pyvis=pyvis, name=name)
 
-    # 共起行列中の最大値を求める
-    Xc_max = Xc.max()
+# 指定したプロット位置(ax)に係り受けによる共起ネットワーク図を描画する
+def plot_dependency_network_with_code_ax(ax, df, word_counts, cutoff, coding_rule=None, pyvis=False, name="pyvis.html"):
+    return plot_cooccur_network_with_code_ax(ax, df, word_counts, cutoff, coding_rule=coding_rule, dep=True, pyvis=pyvis, name=name)
 
-    # プロットする単語リストを取得する
-    words = df.columns
-
-    # プロットする単語の出現頻度の最大値を求める (正規化用)
-    count_max = word_counts.max()
-
-    weights_w, weights_c = [], []
-
-    # 共起行列の要素ごとのループ
-    for i, j in zip(*Xc.nonzero()):
-        # 対角行列でかつ値がしきい値を超えるものを保持する (値がゼロの要素はスキップ)
-        if i != j and Xc[i,j] > cutoff:
-            # ノード: 一方の単語とノードの大きさ(正規化した出現頻度)を保持する
-            weights_w.append((words[i], {'title': words[i], 'size': word_counts[i] / count_max * 100}))
-            # ノード: 他方の単語とノードの大きさ(正規化した出現頻度)を保持する
-            weights_w.append((words[j], {'title': words[j], 'size': word_counts[j] / count_max * 100}))
-            # エッジ: 両端の単語を結ぶエッジの太さ(正規化した共起行列の値)を保持する
-            weights_c.append((words[i], words[j], Xc[i,j] / Xc_max * 3))
-
-    # プロットの準備
-    plt.figure(figsize=(width, height))
-
-    # グラフの作成
-    G = nx.DiGraph()
-    G.add_nodes_from(weights_w)
-    G.add_weighted_edges_from(weights_c)
-    G.remove_nodes_from(list(nx.isolates(G)))
-    # G = nx.minimum_spanning_tree(G)
-
-    # サブグラフの検出
-    communities = community.greedy_modularity_communities(G)
-
-    # ノードにサブグラフのグループを設定する
-    for node in G:
-        for i, c in enumerate(communities):
-            if node in c:
-                G.nodes[node]['group'] = i
-
-    # エッジのタイトルに重みの値を設定する
-    for u, v in G.edges():
-        G[u][v]['title'] = f"{G[u][v]['weight']/3:0.2f}"
-
-    # プロット用にノートとエッジの重みをリストに変換する
-    weights_n = np.array(list(nx.get_node_attributes(G, 'size').values()))
-    weights_e = np.array(list(nx.get_edge_attributes(G, 'weight').values()))
-    color_map = np.array(list(nx.get_node_attributes(G, 'group').values()))
-
-    # グラフの描画
-    # pos = nx.spring_layout(G, k=0.3)
-    pos = graphviz_layout(G, prog='neato', args='-Goverlap="scalexy" -Gsep="+6" -Gnodesep=0.8 -Gsplines="polyline" -GpackMode="graph" -Gstart={}'.format(43))
-    nx.draw_networkx_nodes(G, pos, node_color=color_map, alpha=0.7, cmap=plt.cm.Set2, node_size=weights_n * 50)
-    nx.draw_networkx_edges(G, pos, edge_color='gray', edge_cmap=plt.cm.Blues, alpha=0.7, width=weights_e)
-    nx.draw_networkx_labels(G, pos, font_family='IPAexGothic')
-
-    # プロットの仕上げ
-    plt.axis("off")
-    plt.show()
-
-    if pyvis:
-        # PyVis ネットワークの作成
-        net = Network(notebook=True, cdn_resources='in_line')
-        net.from_nx(G)
-        net.show_buttons(filter_=['nodes', 'edges', 'physics'])
-        pyvis_plot = net.show(f"{name}")
-        display(pyvis_plot)
 
 # 対応分析の結果をプロットする
 def plot_coresp(row_coord, col_coord, row_labels, col_labels, explained_inertia=None, width=8, height=8):
