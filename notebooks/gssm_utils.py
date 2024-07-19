@@ -139,7 +139,10 @@ def plot_cooccur_network_ax(ax, df, word_counts, cutoff, dep=False, pyvis=False,
             weights_c.append((words[i], words[j], Xc[i,j] / Xc_max * 3))
 
     # グラフの作成
-    G = nx.Graph() if dep else nx.DiGraph()
+    if dep:
+        G = nx.DiGraph()
+    else:
+        G = nx.Graph()
     G.add_nodes_from(weights_w)
     G.add_weighted_edges_from(weights_c)
     G.remove_nodes_from(list(nx.isolates(G)))
@@ -209,7 +212,10 @@ def plot_cooccur_network_with_code_ax(ax, df, word_counts, cutoff, coding_rule=N
             weights_c.append((words[i], words[j], Xc[i,j] / Xc_max * 3))
 
     # グラフの作成
-    G = nx.Graph() if dep else nx.DiGraph()
+    if dep:
+        G = nx.DiGraph()
+    else:
+        G = nx.Graph()
     G.add_nodes_from(weights_w)
     G.add_weighted_edges_from(weights_c)
     G.remove_nodes_from(list(nx.isolates(G)))
